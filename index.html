@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="code1.js"></script>
+    <audio src=""></audio>
+</head>
+
+<body>
+
+    <div id="hp1">
+        <div style="display: flex;">
+            <div>
+                <h1 style=" padding: 30px 0px 0px 360px;"> HP:{{hp_player}}</h1>
+
+                <img src="HPbar.png" alt="" class="hpBar1">
+
+            </div>
+            <div>
+                <h1 style=" padding: 30px 0px 0px 300px;"> HP:{{hp_enemy}}</h1>
+                <img src="HPbar.png" alt="" class="hpBar2">
+
+            </div>
+
+
+        </div>
+
+        <div class="table1">
+
+            <img src="/images/player.jpg" alt="" style="width: 300px ; height: 200px; padding-left: 280px;">
+            <img src="/images/monter.jpg" alt="" style="width: 200px ; height: 200px; padding-left: 250px;">
+
+
+        </div>
+
+        <div class="bt">
+            <button class="attackB" v-on:click="p_attack()"> Attack </button>
+            <button class="attackB2" v-on:click="s_attack()"> Special Attack </button>
+
+
+
+
+        </div>
+        <div class="battle_t">
+            <h1 style="text-align: center; padding-top: 20px;"> Battle log</h1>
+            <h1 style="text-align: center;"> {{player_t}}</h1>
+            <h1 style="text-align: center;"> {{enemy_t}}</h1>
+
+
+        </div>
+        <div>
+
+
+        </div>
+
+
+    </div>
+    <script>
+        var hp_ = new Vue({
+            el: "#hp1",
+            data:
+            {
+                hp_player: 100,
+                hp_enemy: 100,
+                attack_so: new Audio('arrow.mp3'),
+                attack_so2: new Audio('arrow.mp3'),
+                player_t: "",
+                enemy_t: "",
+                battle_end: false
+
+
+            },
+            methods:
+            {
+
+
+
+
+                randomDamage: function (min, max) {
+                    return Math.max(Math.floor(Math.random() * max) + 1, min);
+                },
+
+                e_attack: function () {
+                    var damage = this.randomDamage(5, 15);
+                    this.hp_player -= damage;
+                    this.enemy_t = "Enemy deal " + damage + " damage."
+                },
+
+                p_attack: function () {
+                    if (!this.battle_end) {
+                        var damage = this.randomDamage(3, 10);
+                        this.hp_enemy -= damage;
+                        this.e_attack();
+                        this.attack_so.play()
+                        this.player_t = "Player deal " + damage + " damage.";
+
+                        console.log("attack");
+                    }
+
+                    if (this.hp_player <= 0) {
+                        this.hp_player = 0;
+                        this.player_t = "Player Lose.";
+                        this.enemy_t = "";
+                        this.battle_end = true;
+                    }
+                    if (this.hp_enemy <= 0) {
+                        this.hp_enemy = 0;
+                        this.player_t = "Player Win.";
+                        this.enemy_t = "";
+                        this.battle_end = true;
+                    }
+
+                },
+
+                s_attack: function () {
+                    if (!this.battle_end) {
+                        var damage = this.randomDamage(10, 20);
+                        this.hp_enemy -= damage;
+                        this.player_t = "Player use special attack deal " + damage + " damage."
+                        this.attack_so2.play()
+                        this.e_attack();
+                    }
+
+                    if (this.hp_player <= 0) {
+                        this.hp_player = 0;
+                        this.player_t = "Player Lose.";
+                        this.battle_end = true;
+                        this.enemy_t = "";
+                    }
+                    if (this.hp_enemy <= 0) {
+                        this.hp_enemy = 0;
+                        this.player_t = "Player Win.";
+                        this.battle_end = true;
+                        this.enemy_t = "";
+                    }
+
+                }
+            }
+
+
+
+        })
+
+
+    </script>
+</body>
+
+</html>
